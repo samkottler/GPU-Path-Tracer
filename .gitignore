@@ -1,0 +1,6 @@
+test.png
+*.ppm
+bin/*
+obj/*
+images/*
+data/*

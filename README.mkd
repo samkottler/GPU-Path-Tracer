@@ -1,0 +1,53 @@
+GPU Path Tracer
+===============
+A path tracer implemented using CUDA. Needs a Nvidia graphics card with CUDA installed. I think the newest features it uses are from CUDA 4, so it should be compatible with most reasonablely modern cards. I wrote it on a linux matchine so I have no idea if will work on Windows or macOS. Some optimizations I used:
+
+  * A BVH for triangular meshes which turns intersection into O(log n) instead of O(n)
+  * Use constant GPU memory whenever possible
+  * Minimized branching
+
+## Defining a scene
+The scene is defined by the scene file and is read at runtime so there is no need to recompile to change the scene. The order of this file doesn't matter but I have the quality parameters at the top for convenience. The only time the order matters if for refering to which number material to use.
+
+For single color materials the format is 
+
+    constant {material color} {emission color} density
+
+For checkered patters the format is 
+
+    checkered {color 1} {color 2} {emission color} xscale yscale
+
+For image textures the format is 
+
+    pix filename
+
+All objects in a scene need a scatter type and a texture type. The options for scattering are 
+
+| Type | Meaning |
+|:----:|---------|
+|DIFF|Perfectly diffuse reflections|
+|SPEC|Perfectly specular reflections|
+|REFR|Reflect of refract based on Schlick's approxomation|
+|METAL|Imperfect specular reflections|
+|COAT|Reflect diffusely or specularly based on Schlick's approxomation|
+|VOLUME|Volume filled with particles. Density of particles determines what material looks like. Less dense looks likes fog and more dense looks like material with subsurface scattering|
+
+For spheres 
+
+    sphere {center} radius scatter texture num
+
+For boxes 
+
+    box {min} {max} scatter texture num
+
+For meshes 
+
+    mesh filename scale {translation} scatter texture num
+
+## Sample Images
+
+![Image](samples/glass_budda.png)
+
+![Image](samples/dragon_with_glass.png)
+
+![Imgae](samples/subsurface.png)
