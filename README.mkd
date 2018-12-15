@@ -54,3 +54,6 @@ Stanford dragon made of metal material with a glass ball in front. Notice the de
 
 ![Image](samples/subsurface.png)
 Stacked spheres to demonstrate subsurface scattering. Each ball is a volume of pink particles inside a clear sphere. Notice the bottom one is opaque while the top one is transparent. This demonstrates the effect but a real material would probably use a more dense volume of particles.
+
+![Image](samples/prism.png)
+This is a glass prism to demonstrate separation of light into rgb with refraction.

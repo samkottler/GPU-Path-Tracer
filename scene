@@ -1,7 +1,7 @@
-width 512
-height 384
-#width 1024
-#height 768
+#width 512
+#height 384
+width 1024
+height 768
 samples 30000
 radius 1
 
@@ -29,7 +29,7 @@ box {-21, 0, -20} {-20, 30, 50} DIFF CONST 1
 box {20, 0, -20} {21, 30, 50} DIFF CONST 2
 box {-20, 0, -21} {20, 30, -20} DIFF CONST 0
 box {-20, 0, 50} {20, 30, 51} DIFF CONST 0
-box {-5, 29.99, -5} {5, 31, 5} SPEC CONST 3
+box {-20, 29.99, -1} {20, 31, 1} SPEC CONST 3
 
 #box {-100, -1, -100} {100, 0, 100} DIFF CHECK 1
 #sphere {-5, 2, -8} 2 DIFF CONST 3
@@ -52,14 +52,14 @@ box {-5, 29.99, -5} {5, 31, 5} SPEC CONST 3
 #sphere {10, 6, 0} 1 REFR CONST 6
 #box {-10, 2, -10} {0, 12, 0} REFR CONST 6
 
-
+mesh data/untitled.ply 5 {-3,5,0} REFR CONST 10
 #mesh data/dragon_vrip.ply 120 {0, -5, 0} VOLUME CONST 7
 #mesh data/happy_vrip.ply 100 {0, -5, 0} VOLUME CONST 7
 #mesh data/lucy.ply 100 {0, 0, 0} COAT CONST 0
 #mesh data/suzanne.obj 5 {0, 7, 0} VOLUME CONST 6
 #mesh data/suzanne.obj 5.1 {0, 7, 0} REFR CONST 6
 #mesh data/icosahedron.obj 6 {-10, 10, 0} REFR CONST 10
-mesh data/bunny_no_holes.ply 100 {3, 0, 0} REFR CONST 10
+#mesh data/bunny_no_holes.ply 100 {3, 0, 0} REFR CONST 10
 
 #sphere {55,43.754264805429415,0}55 SPEC CONST 8
 #sphere {-55,43.754264805429415,0}55 SPEC CONST 8
