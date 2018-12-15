@@ -1,13 +1,13 @@
 GPU Path Tracer
 ===============
-A path tracer implemented using CUDA. Needs a Nvidia graphics card with CUDA installed. I think the newest features it uses are from CUDA 4, so it should be compatible with most reasonablely modern cards. I wrote it on a linux matchine so I have no idea if will work on Windows or macOS. Some optimizations I used:
+A path tracer implemented using CUDA. Needs an Nvidia graphics card with CUDA installed. I think the newest features it uses are from CUDA 4, so it should be compatible with most reasonably modern cards. I wrote it on a linux machine so I have no idea if will work on Windows or macOS. Some optimizations I used:
 
   * A BVH for triangular meshes which turns intersection into O(log n) instead of O(n)
   * Use constant GPU memory whenever possible
   * Minimized branching
 
 ## Defining a scene
-The scene is defined by the scene file and is read at runtime so there is no need to recompile to change the scene. The order of this file doesn't matter but I have the quality parameters at the top for convenience. The only time the order matters if for refering to which number material to use.
+The scene is defined by the scene file and is read at runtime so there is no need to recompile to change the scene. The order of this file doesn't matter but I have the quality parameters at the top for convenience. The only time the order matters if for referring to which number material to use.
 
 For single color materials the format is 
 
@@ -27,9 +27,9 @@ All objects in a scene need a scatter type and a texture type. The options for s
 |:----:|---------|
 |DIFF|Perfectly diffuse reflections|
 |SPEC|Perfectly specular reflections|
-|REFR|Reflect of refract based on Schlick's approxomation|
+|REFR|Reflect of refract based on Schlick's approximation|
 |METAL|Imperfect specular reflections|
-|COAT|Reflect diffusely or specularly based on Schlick's approxomation|
+|COAT|Reflect diffusely or specularly based on Schlick's approximation|
 |VOLUME|Volume filled with particles. Density of particles determines what material looks like. Less dense looks likes fog and more dense looks like material with subsurface scattering|
 
 For spheres 
@@ -47,7 +47,10 @@ For meshes
 ## Sample Images
 
 ![Image](samples/glass_budda.png)
+Happy Budda statue made of red glass. Notice the glass is done volumetrically. So the thicker a part is, the darker the red.
 
 ![Image](samples/dragon_with_glass.png)
+Stanford dragon made of metal material with a glass ball in front. Notice the depth of field effect and caustic from the glass ball. Also notice the indirect relection from the walls in the shadow of the dragon.
 
-![Imgae](samples/subsurface.png)
+![Image](samples/subsurface.png)
+Stacked spheres to demonstrate subsurface scattering. Each ball is a volume of pink particles inside a clear sphere. Notice the bottom one is opaque while the top one is transparent. This demonstrates the effect but a real material would probably use a more dense volume of particles.
