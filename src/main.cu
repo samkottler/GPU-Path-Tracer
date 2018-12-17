@@ -15,7 +15,7 @@
 #include "lodepng.h" // super easy read and write for png images
 #include "cutil_math.h"
 
-#define DISPERSION
+//#define DISPERSION
 
 // return min and max components of a vector
 inline __host__ __device__ float3 minf3(float3 a, float3 b){
@@ -282,7 +282,7 @@ __device__ float3 radiance(Ray& r_in, curandState* randstate){
     mask = make_float3(1.0,1.0,1.0);
     idx_refr = 1.5;
 #endif
-
+	
     // loop is faster than recursion and easy to do here
     for (int bounces = 0; bounces < 40; ++bounces){
 	Hit_data dat;
@@ -298,6 +298,8 @@ __device__ float3 radiance(Ray& r_in, curandState* randstate){
 	float3 emission;
 	float dist_traveled = dat.t; // for everything except volumes
 
+	float3 atten = r_in.attenuation;
+	
 	// color doesn't depend on point
 	if(dat.text == CONST){
 	    col = const_textures[dat.texture_num].color;
@@ -378,7 +380,7 @@ __device__ float3 radiance(Ray& r_in, curandState* randstate){
 	    else{
 		d = refracted;
 		// change media attenuation color
-		if (dat.dist <  0.01){ //entering
+		if (dot(r_in.direction, dat.normal) < 0){ //entering
 		    r_in.attenuation.x = col.x;
 		    r_in.attenuation.y = col.y;
 		    r_in.attenuation.z = col.z;
@@ -442,7 +444,7 @@ __device__ float3 radiance(Ray& r_in, curandState* randstate){
 	if (dat.scat == VOLUME){
 	    float density = const_textures[dat.texture_num].density;
 	    float dist = -(1/density)*logf(curand_uniform(randstate));
-	    if(dat.dist > 0){ // ray started inside
+	    if(dot(r_in.direction, dat.normal) > 0){ // ray started inside
 		if (dist < dat.t){ // ray ends inside
 		    // reflect in random direction
 		    float theta = curand_uniform(randstate)*2*M_PI;
@@ -468,9 +470,10 @@ __device__ float3 radiance(Ray& r_in, curandState* randstate){
 	}
 
 	// attenuation due to media
-	float r = __expf(-1*(1-r_in.attenuation.x)*dist_traveled);
-	float g = __expf(-1*(1-r_in.attenuation.y)*dist_traveled);
-	float b = __expf(-1*(1-r_in.attenuation.z)*dist_traveled);
+        
+	float r = __expf(-1*(1-atten.x)*dist_traveled);
+	float g = __expf(-1*(1-atten.y)*dist_traveled);
+	float b = __expf(-1*(1-atten.z)*dist_traveled);
 	mask = mask*make_float3(r,g,b);
 
 	color += mask*emission; // if object emits light add to total
@@ -510,7 +513,7 @@ __global__ void render_kernel(float3 *output){
     float3 u = cross(make_float3(0,1,0),w);
     float3 v = cross(w,u);
     float focal_length = length(cam - look_at);
-    float aperture = 20.25;
+    float aperture = 20;
     float lens_radius = 0.5;
     float he = tanf(aperture/2);
     float wi = he*width/height;
