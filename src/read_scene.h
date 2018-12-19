@@ -1,7 +1,8 @@
 
 // read file and add triangles to list
-void create_mesh(std::string filename, float scale, float3 translate, scatter_type s,
-		 texture_type t, int text_num, int meshes){
+void create_mesh(std::string filename, float scale, float3 translate, float3 yaxis, float3 xaxis,
+		 scatter_type s, texture_type t, int text_num, int meshes){
+    float3 zaxis = cross(yaxis, xaxis);
     const char* edot = strrchr(filename.c_str(), '.');
     std::vector<float3> verts;
     if (edot){
@@ -40,16 +41,17 @@ void create_mesh(std::string filename, float scale, float3 translate, scatter_ty
 			float x, y, z;
 			std::istringstream str_in(line);
 			str_in >> x >> y >> z;
-			verts.push_back({x,y,z});
+			float3 point = {x,y,z};
+			verts.push_back(scale*float3({dot(point,xaxis), dot(point,yaxis), dot(point,zaxis)}) + translate);
 		    }
 		    else if (num_tris){ // once we have all verts, read triangles
 			num_tris--;
 			uint dummy, idx1, idx2, idx3;
 			std::istringstream str(line);
 			str >> dummy >> idx1 >> idx2 >> idx3;
-			float3 v0 = scale*verts[idx1] + translate;
-			float3 v1 = scale*verts[idx2] + translate;
-			float3 v2 = scale*verts[idx3] + translate;
+			float3 v0 = verts[idx1];
+			float3 v1 = verts[idx2];
+			float3 v2 = verts[idx3];
 			h_triangles.push_back({v0, v1-v0, v2-v0,
 				    normalize(cross(v1-v0, v2-v0)), s, t,
 				    text_num, {0,0,0}, meshes});
@@ -226,17 +228,22 @@ void read_scene(){
 	}
 	else if (line.substr(0,4) == "mesh"){ //triangle mesh
 	    char filename[100];
-	    float scale, tx, ty, tz;
+	    float scale, tx, ty, tz, xx, xy, xz, yx, yy, yz;
 	    char scat[20];
 	    char text[20];
 	    int num;
-	    read_num = sscanf(line.c_str(), "mesh %s %f {%f, %f, %f} %s %s %d",
-			      &filename, &scale, &tx, &ty, &tz, &scat, &text, &num);
-	    check_read(8, read_num, line_num);
+	    read_num = sscanf(line.c_str(), "mesh %s %f {%f, %f, %f} <%f, %f, %f> <%f, %f, %f> "
+			      "%s %s %d", &filename, &scale, &tx, &ty, &tz, &yx, &yy, &yz, &xx, &xy,
+			      &xz, &scat, &text, &num);
+	    check_read(14, read_num, line_num);
 	    scatter_type s;
 	    texture_type t;
 	    get_scat(scat, text, s, t, line_num);
-	    create_mesh(std::string(filename), scale, {tx, ty, tz}, s, t, num, meshes);
+	    float3 xaxis = normalize(float3({xx, xy, xz}));
+            float3 yaxis = normalize(float3({yx, yy, yz}));
+            if (fabs(dot(xaxis,yaxis)) > 0.01) print_error("Axes not perpendicular on line " +
+							    std::to_string(line_num));
+	    create_mesh(std::string(filename), scale, {tx, ty, tz}, yaxis, xaxis, s, t, num, meshes);
 	    meshes++;
 	}
     }

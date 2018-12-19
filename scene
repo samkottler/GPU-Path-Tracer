@@ -53,8 +53,8 @@ box {-5, 29.99, -5} {5, 31, 5} SPEC CONST 3
 #box {-10, 2, -10} {0, 12, 0} REFR CONST 6
 
 #mesh data/untitled.ply 5 {-3,5,0} REFR CONST 10
-#mesh data/dragon_vrip.ply 120 {0, -5, 0} VOLUME CONST 7
-mesh data/happy_vrip.ply 120 {0, -6, 0} VOLUME CONST 6
+mesh data/dragon_vrip.ply 120 {0, -5, 0} <0,1,0> <1,0,-1> DIFF CONST 6
+#mesh data/happy_vrip.ply 120 {0, -6, 0} VOLUME CONST 6
 #mesh data/lucy.ply 100 {0, 0, 0} COAT CONST 0
 #mesh data/suzanne.obj 5 {0, 7, 0} VOLUME CONST 6
 #mesh data/suzanne.obj 5.1 {0, 7, 0} REFR CONST 6

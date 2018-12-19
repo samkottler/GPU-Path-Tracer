@@ -42,7 +42,7 @@ For boxes
 
 For meshes 
 
-    mesh filename scale {translation} scatter texture num
+    mesh filename scale {translation} <y-axis> <x-axis> scatter texture num
 
 ## Sample Images
 
