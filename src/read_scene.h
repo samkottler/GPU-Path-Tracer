@@ -12,9 +12,6 @@ void create_mesh(std::string filename, float scale, float3 translate, float3 yax
     temp = xaxis.y;
     xaxis.y = yaxis.x;
     yaxis.x = temp;
-    printf("%f,%f,%f\n", xaxis.x, xaxis.y, xaxis.z);
-    printf("%f,%f,%f\n", yaxis.x, yaxis.y, yaxis.z);
-    printf("%f,%f,%f\n", zaxis.x, zaxis.y, zaxis.z);
     const char* edot = strrchr(filename.c_str(), '.');
     std::vector<float3> verts;
     if (edot){
