@@ -2,7 +2,19 @@
 // read file and add triangles to list
 void create_mesh(std::string filename, float scale, float3 translate, float3 yaxis, float3 xaxis,
 		 scatter_type s, texture_type t, int text_num, int meshes){
-    float3 zaxis = cross(yaxis, xaxis);
+    float3 zaxis = cross(xaxis, yaxis);
+    float temp  = zaxis.x;
+    zaxis.x = xaxis.z;
+    xaxis.z = temp;
+    temp = zaxis.y;
+    zaxis.y = yaxis.z;
+    yaxis.z = temp;
+    temp = xaxis.y;
+    xaxis.y = yaxis.x;
+    yaxis.x = temp;
+    printf("%f,%f,%f\n", xaxis.x, xaxis.y, xaxis.z);
+    printf("%f,%f,%f\n", yaxis.x, yaxis.y, yaxis.z);
+    printf("%f,%f,%f\n", zaxis.x, zaxis.y, zaxis.z);
     const char* edot = strrchr(filename.c_str(), '.');
     std::vector<float3> verts;
     if (edot){
@@ -70,7 +82,10 @@ void create_mesh(std::string filename, float scale, float3 translate, float3 yax
 		if (line.substr(0,2) == "v "){ // read vertex coordinate
 		    float x, y, z;
 		    sscanf(line.c_str(), "v %f %f %f", &x, &y, &z);
-		    verts.push_back({x,y,z});
+		    float3 point = {x,y,z};
+		    verts.push_back(scale*float3({dot(point,xaxis), dot(point, yaxis), dot(point, zaxis)}) + translate);
+		    //float3 apoint = verts.back();
+		    //printf("<%f,%f,%f> <%f,%f,%f>\n", point.x, point.y, point.z, apoint.x, apoint.y, apoint.z);
 		}
 		else if(line.substr(0,2) == "vt"){ //read uv for texture
 		    float u, v;
@@ -82,9 +97,9 @@ void create_mesh(std::string filename, float scale, float3 translate, float3 yax
 		    sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
 			   &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
 		    //std::cout << uv.size() <<  " " << t1 << std::endl;
-		    float3 vert0 = scale*verts[v1-1] + translate;
-		    float3 vert1 = scale*verts[v2-1] + translate;
-		    float3 vert2 = scale*verts[v3-1] + translate;
+		    float3 vert0 = verts[v1-1];
+		    float3 vert1 = verts[v2-1];
+		    float3 vert2 = verts[v3-1];
 		    float2 uv0 = uv[t1-1];
 		    float2 uv1 = uv[t2-1];
 		    float2 uv2 = uv[t3-1];

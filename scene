@@ -2,7 +2,7 @@ width 512
 height 384
 #width 720
 #height 1280
-samples 10000
+samples 1000
 radius 1
 
 #Materials
@@ -53,12 +53,12 @@ box {-5, 29.99, -5} {5, 31, 5} SPEC CONST 3
 #box {-10, 2, -10} {0, 12, 0} REFR CONST 6
 
 #mesh data/untitled.ply 5 {-3,5,0} REFR CONST 10
-mesh data/dragon_vrip.ply 120 {0, -5, 0} <0,1,0> <1,0,-1> DIFF CONST 6
+#mesh data/dragon_vrip_res4.ply 120 {0, -5, -10} <0,1,0> <1,0,0> DIFF CONST 6
 #mesh data/happy_vrip.ply 120 {0, -6, 0} VOLUME CONST 6
 #mesh data/lucy.ply 100 {0, 0, 0} COAT CONST 0
 #mesh data/suzanne.obj 5 {0, 7, 0} VOLUME CONST 6
-#mesh data/suzanne.obj 5.1 {0, 7, 0} REFR CONST 6
-#mesh data/icosahedron.obj 6 {-10, 10, 0} REFR CONST 10
+#mesh data/suzanne.obj 5 {0, 7, 0} <-1,1,-1> <1,0,-1> DIFF CONST 6
+#mesh data/icosahedron.obj 6 {0, 10, 0} <0,1,0> <1,0,1> DIFF CONST 4
 #mesh data/bunny_no_holes.ply 100 {3, 0, 0} VOLUME CONST 6
 
 #sphere {55,43.754264805429415,0}55 SPEC CONST 8
